@@ -1,0 +1,136 @@
+﻿@model ControleRNC_WEB.Models.Rnc
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/select2")
+
+
+<h2>Editar RNC</h2>
+<br />
+<form method="post" action="@Url.Action("ConfirmEdit", "Rnc")">
+    
+    <div class="tab-content">
+
+        <!--Aba geral-->
+        <div id="geral" class="col-md-12">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.LabelFor(model => model.Codigo)
+                    @Html.TextBoxFor(model => model.Codigo, new { @class = "form-control"})
+                </div>
+                <div class="col-md-3">
+                    <label>Tipo de RNC</label>
+                    @Html.DropDownList("IdTipoRnc", (SelectList)ViewBag.TiposRnc, new { @class = "form-control", onclick = "showHiddeObsTipoRnc()" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    @Html.LabelFor(model => model.DataAbertura)
+                    <input type="date" name="DataAbertura" value="@Model.DataAbertura.ToString("yyyy-MM-dd")" class="form-control"/>
+                </div>
+                <div class="col-md-3">
+                    <label>Departamento</label>
+                    @Html.DropDownList("CodDepartamento", (SelectList)ViewBag.Departamentos, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Origem</label>
+                    @Html.TextBox("Origem", null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label class="control-label">Desenho</label>
+                    <select name="CodigoDesenho" class="form-control col-md-4 desenho CodigoDesenho" style="width: 100%;" id="select2CodigoDesenho">
+                        <option value="none" selected="selected">Selecione um equipamento</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Quantidade</label>
+                    @Html.TextBoxFor(model => model.Qtde, new { @class = "form-control", type = "number" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label">Equipamento</label>
+                    <select name="CodigoEquipamento" class="form-control col-md-5 desenho CodigoEquipamento" style="width: 100%;" id="select2CodigoEquipamento">
+                        <option value="none" selected="selected">Selecione um equipamento</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Número de série</label>
+                    @Html.TextBoxFor(x => x.Serial, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <label>Descricao da não conformidade</label>
+                    @Html.TextArea("DescricaoRnc", null, new { @class = "form-control", rows = "5", style = "width: 100%; max-width: 100%;" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Ação tomada</label>
+                    @Html.DropDownList("IdTipoAcao", (SelectList)ViewBag.Acoes, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Status</label>
+                    @Html.DropDownList("IdStatus", (SelectList)ViewBag.Status, new { @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-primary" value="ConfirmNew">Salvar</button>
+</form>
+<br />
+
+<div>
+    @Html.ActionLink("Voltar", "Index")
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        $('#tipoRnc').change();
+        if ("@Model.CodigoDesenho" != "") {
+                $('.CodigoDesenho').empty().append($("<option/>").val("@Model.CodigoDesenho").text("@Model.CodigoDesenho - " + "@Html.Raw(Model.Desenho.Descricao)"))
+                    .val("@Model.CodigoDesenho") //select option of select2
+                    .trigger("change"); //apply to select2
+        }
+        else{
+            $('.CodigoEquipamento').empty().append($("<option/>").val("@Model.CodigoEquipamento").text("@Model.CodigoEquipamento - " + "@Html.Raw(Model.Desenho.Descricao)"))
+                    .val("@Model.CodigoEquipamento") //select option of select2
+                    .trigger("change"); //apply to select2
+        }
+    });
+
+    $("#tipoRnc")
+        .on("change",
+            function () {
+                $.ajax({
+                    url: "../VerifyAllowCompl?id=" + tipoRnc.options[tipoRnc.selectedIndex].value,
+                    dataType: 'text',
+                    success: function (data) {
+                        if (data == "True") {
+                            document.getElementById("obsTipo").style.visibility = "visible";
+                        } else {
+                            document.getElementById("obsTipo").style.visibility = "collapse";
+                        }
+                    }
+                });
+            });
+</script>
+
+@Scripts.Render("~/bundles/ajaxfunctions")

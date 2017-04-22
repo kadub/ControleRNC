@@ -1,0 +1,44 @@
+﻿@using System.Activities.Statements
+@using ControleRNC_WEB.Models
+@model ControleRNC_WEB.Models.Produto
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalhes</h2>
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Estoque: @Model.CodigoDescricao</div>
+
+    <!-- Table -->
+    <table class="table">
+        <tr>
+            <th>
+                Descrição
+            </th>
+            <th>
+                Saldo
+            </th>
+            <th>
+                Custo Unitário
+            </th>
+        </tr>
+        @foreach (ProdutoEstoque pe in Model.ProdutoEstoques)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => pe.Estoque.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => pe.Saldo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => pe.CustoUnitario)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+

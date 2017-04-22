@@ -1,0 +1,127 @@
+﻿@model IEnumerable<ControleRNC_WEB.Models.TipoStatus>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Tipos de status</h2>
+
+
+<p>
+    <a href="#" data-toggle="modal" data-target="#modalNewStatus">Criar um novo status</a>
+</p>    
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descricao)
+        </td>
+        <td>
+            <a href="#" onclick="getDataToEdit(@item.Id)" data-toggle="modal" data-target="#modalEditStatus">editar</a>
+        </td>
+        <td>
+            @Html.ActionLink("excluir", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
+
+<!-- Modal novo status -->
+<div class="modal fade" id="modalNewStatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Novo status</h4>
+            </div>
+            <div class="modal-body">
+               
+                <form method="post" action="../TipoStatus/Create/">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Descrição", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Descricao" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Criar" class="btn btn-info" />
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getDataToEdit(id){
+        $.ajax({
+            url: "/TipoStatus/GetById?id=" + id,
+            success: function (result) {
+                document.getElementById('descricaoEdit').value = result.Descricao;
+                document.getElementById('idEdit').value = result.Id;
+            }
+        })
+    }
+</script>
+
+<!-- Modal editar status -->
+<div class="modal fade" id="modalEditStatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Novo status</h4>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="../TipoStatus/Edit/">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Id" id="idEdit" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Descrição", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Descricao" id="descricaoEdit" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Salvar" class="btn btn-info" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

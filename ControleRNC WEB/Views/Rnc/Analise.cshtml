@@ -1,0 +1,91 @@
+﻿@model ControleRNC_WEB.ModelViews.AnaliseModelView
+
+@{
+    ViewBag.Title = "Analise";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Tipos de RNC', 'Quantidade de RNC']@Html.Raw(Model.ChartPieByAcao())
+        ]);
+
+        var options = {
+            title: 'Rnc por seu tipo',
+            legend: { position: 'top' }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart2);
+
+      function drawChart2() {
+        var data = google.visualization.arrayToDataTable([
+          ['Departamento', 'Qtde. de RNC']@Html.Raw(Model.DataByDepartment())]);
+
+        var options = {
+          title: 'Quantidade de RNC por departamento',
+          legend: { position: 'top' }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+</script>
+
+<h2>Analisar</h2>
+
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="dateInI">Data de início</label>
+            <input type="date" class="form-control" name="dateIni" />
+        </div>
+        <div class="form-group col-md-4">
+            <label for="dateEnd">Data final</label>
+            <input type="date" class="form-control" name="dateEnd" />
+        </div>
+        <div class="form-group col-md-4">
+            <label for="tipoRnc">Tipo de Rnc</label>
+            @Html.DropDownList("tipoRnc", (SelectList)ViewBag.TiposRnc, "TODOS", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="departamento">Departamento</label>
+            @Html.DropDownList("departamento", (SelectList)ViewBag.Departamentos, "TODOS", new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-4">
+            <label for="status">Status</label>
+            @Html.DropDownList("status", (SelectList)ViewBag.TiposStatus, "TODOS", new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-4">
+            <label for="acao">Ação tomada</label>
+            @Html.DropDownList("acao", (SelectList)ViewBag.TiposAcao, "TODAS", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row col-md-6">
+        <button type="submit" class="btn btn-primary col-md-3" value="Index" style="vertical-align: bottom;">Filtrar</button>
+    </div>
+</form>
+
+<div id="piechart" style="width: 100%;"></div>
+
+<hr />
+
+<div id="curve_chart" style="width: 100%;"></div>
+
+
+
+

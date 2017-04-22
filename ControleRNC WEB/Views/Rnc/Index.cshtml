@@ -1,0 +1,127 @@
+﻿@model PagedList.IPagedList<ControleRNC_WEB.Models.Rnc>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "RNC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>RNC</h2>
+
+<p>
+
+    @Html.ActionLink("Cadastrar RNC", "Create")
+</p>
+<p>
+    @Html.ActionLink("[DESENVOLVIMENTO] Analisar", "Analise")
+</p>
+
+<hr/>
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-4 ">
+            <label for="filter">Procurar</label>
+            <input type="text" class="form-control" name="filter" placeholder="ex.: resistor">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="dateInI">Data de início</label>
+            <input type="date" class="form-control" name="dateIni" />
+        </div>
+        <div class="form-group col-md-4">
+            <label for="dateEnd">Data final</label>
+            <input type="date" class="form-control" name="dateEnd" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="tipoRnc">Tipo de Rnc</label>
+            @Html.DropDownList("tipoRnc", (SelectList)ViewBag.TiposRnc, "TODOS", new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-4">
+            <label for="departamento">Departamento</label>
+            @Html.DropDownList("departamento", (SelectList)ViewBag.Departamentos, "TODOS", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="status">Status</label>
+            @Html.DropDownList("status", (SelectList)ViewBag.TiposStatus, "TODOS", new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-4">
+            <label for="acao">Ação tomada</label>
+            @Html.DropDownList("acao", (SelectList)ViewBag.TiposAcao, "TODAS", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row col-md-6">
+        <button type="submit" class="btn btn-primary col-md-3" value="Index" style="vertical-align: bottom;">Filtrar</button>
+    </div>
+</form>
+
+@if (Model.Any())
+{
+    <br />    <br />
+    <table class="table">
+        <tr>
+            <th>
+                Código
+            </th>
+            <th>
+                Tipo de RNC
+            </th>
+            <th>
+                Departamento
+            </th>
+            <th>
+                Item da RNC
+            </th>
+            <th>
+                Data de abertura
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Codigo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoRnc.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Departamento.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Desenho.Descricao)
+                </td>
+                <td style="white-space: nowrap;">
+                    @Html.DisplayFor(modelItem => item.DataAbertura)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Rnc", new {id = item.Id})">
+                        <span class="glyphicon glyphicon-zoom-in"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteConfirmed","Rnc", new {id = item.Id})">
+                        <span class="glyphicon glyphicon-trash" style="margin-left: 20px;"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br/>
+    <span>Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new {page, sortBy = ViewBag.CurrentSort, filter = ViewBag.CurrentFilter}))
+}
+else
+{
+    <div>
+        <span style="font-size: 200%" ;> :) </span>A pesquisa não retornou registros.
+    </div>
+}
+

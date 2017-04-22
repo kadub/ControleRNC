@@ -1,0 +1,123 @@
+﻿@model ControleRNC_WEB.Models.Rnc
+@using ControleRNC_WEB.Models;
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/select2")
+
+<script>
+    function showHiddeObsTipoRnc() {
+        var url = "VerifyAllowCompl?id=" + tipoRnc.options[tipoRnc.selectedIndex].value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == "True") {
+                    document.getElementById("obsTipo").style.visibility = "visible";
+                } else {
+                    document.getElementById("obsTipo").style.visibility = "collapse";
+                }
+            }
+        };
+        xhttp.open("GET", url, false);
+        xhttp.send();
+    }
+</script>
+
+
+<h2>Nova RNC</h2>
+<br/>
+<form method="post" action="ConfirmNew">
+    <div class="tab-content">
+
+        <!--Aba geral-->
+        <div id="geral" class="col-md-12">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label>Código da RNC</label>
+                    <input type="text" name="Codigo" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>Tipo de RNC</label>
+                    @Html.DropDownList("IdTipoRnc", (SelectList)ViewBag.TiposRnc, new { @class = "form-control", onclick = "showHiddeObsTipoRnc()" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label>Data de abertura</label>
+                    @Html.TextBox("DataAbertura", null, new { @class = "form-control", @type = "date" })
+                </div>
+                <div class="col-md-3">
+                    <label>Departamento</label>
+                    @Html.DropDownList("CodDepartamento", (SelectList)ViewBag.Departamentos, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Origem</label>
+                    @Html.TextBox("Origem", null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label class="control-label">Desenho</label>
+                    <select name="CodigoDesenho" class="form-control col-md-4 desenho" style="width: 100%;">
+                        <option value="none" selected="selected">Selecione um equipamento</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Quantidade</label>
+                    @Html.TextBox("Qtde", null, new { @class = "form-control", type = "number", @Value = "1" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label">Equipamento</label>
+                    <select name="CodigoEquipamento" class="form-control col-md-5 desenho" style="width: 100%;">
+                        <option value="none" selected="selected">Selecione um equipamento</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Número de série</label>
+                    @Html.TextBoxFor(x => x.Serial, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <label>Descricao da não conformidade</label>
+                    @Html.TextArea("DescricaoRnc", null, new { @class = "form-control", rows = "5", style = "width: 100%; max-width: 100%;" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Ação tomada</label>
+                    @Html.DropDownList("IdTipoAcao", (SelectList)ViewBag.Acoes, new { @class = "form-control"})
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Status</label>
+                    @Html.DropDownList("IdStatus", (SelectList)ViewBag.Status, new { @class = "form-control"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-primary" value="ConfirmNew">Cadastrar</button>
+</form>
+<br/>
+
+<div >
+    @Html.ActionLink("Voltar", "Index")
+</div>
+
+@Scripts.Render("~/bundles/ajaxfunctions")

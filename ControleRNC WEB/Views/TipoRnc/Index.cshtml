@@ -1,0 +1,117 @@
+﻿@model List<ControleRNC_WEB.Models.TipoRnc>
+
+@{
+    ViewBag.Title = "Tipos de RNC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Tipos de RNC</h2>
+<p>
+    <a href="#" data-toggle="modal" data-target="#modalNewTipoRnc">Criar novo tipo de RNC</a>
+</p>
+<table class="table">
+    <tr>
+        <th>Descricao</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Descricao</td>
+            <td>
+                <a href="#" onclick="getDataToEdit(@item.Id)" data-toggle="modal" data-target="#modalEditTipoRnc">editar</a>
+            </td>
+            <td>@Html.ActionLink("excluir", "Delete" + item.Id)</td>
+        </tr>
+    }
+</table>
+
+<!-- Modal novo tipo de rnc -->
+<div class="modal fade" id="modalNewTipoRnc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Novo tipo de RNC  </h4>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="../TipoRnc/ConfirmNew/">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Descrição", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Descricao" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Criar" class="btn btn-info" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getDataToEdit(id){
+        $.ajax({
+            url: "/TipoRnc/GetById?id=" + id,
+            success: function (result) {
+                document.getElementById('descricaoEdit').value = result.Descricao;
+                document.getElementById('idEdit').value = result.Id;
+            }
+        })
+    }
+</script>
+
+<!-- Modal editar tipo de rnc -->
+<div class="modal fade" id="modalEditTipoRnc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Editar tipo de RNC</h4>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="../TipoRnc/Edit/">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Id" id="idEdit" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Descricao", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="Descricao" id="descricaoEdit" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Salvar" class="btn btn-info" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
